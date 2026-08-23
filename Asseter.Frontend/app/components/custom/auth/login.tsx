@@ -25,7 +25,7 @@ export function Login() {
           <span>Username</span>
           <input
             onChange={(e) => setUsername(e.target.value)}
-            className="border-2 border-zinc-600 ring-0 outline-0"
+            className="border-2 border-zinc-600 ring-0 outline-0 p-1"
             type="text"
             placeholder="your username"
           ></input>
@@ -34,7 +34,7 @@ export function Login() {
           <span>Password</span>
           <input
             onChange={(e) => setPassword(e.target.value)}
-            className="border-2 border-zinc-600 ring-0 outline-0"
+            className="border-2 border-zinc-600 ring-0 outline-0 p-1"
             type="password"
           ></input>
           <div className="mt-5">
