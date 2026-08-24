@@ -1,19 +1,17 @@
-import {
-  BookSearch, LayoutDashboard,
-  LogOut
-} from "lucide-react";
+import { BookSearch, LayoutDashboard, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel, SidebarMenu,
+  SidebarGroupLabel,
+  SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
   SidebarRail,
-  SidebarTrigger
+  SidebarTrigger,
 } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
 import { SidebarTab, type SidebarTabValue } from "../home/app";
@@ -61,22 +59,23 @@ const AppSidebar = ({
   onTabSelect: (tab: SidebarTabValue) => void;
 }) => {
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar className="bg-secondary text-white">
+      <SidebarContent className="bg-secondary text-white">
         {sidebarData.navGroups.map((group) => (
           <SidebarGroup key={group.title}>
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-white">
+              {group.title}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem
-                    className="cursor-pointer"
                     onClick={() => onTabSelect(item.tab ?? SidebarTab.OVERVIEW)}
                     key={item.label}
                   >
-                    <SidebarMenuButton>
+                    <SidebarMenuButton className="cursor-pointer">
                       <item.icon></item.icon>
-                      <button>{item.label}</button>
+                      <span>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -85,9 +84,11 @@ const AppSidebar = ({
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="bg-secondary text-white">
         <SidebarGroup>
-          <SidebarGroupLabel>{sidebarData.footerGroup.title}</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-white">
+            {sidebarData.footerGroup.title}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarData.footerGroup.items.map((item) => (
@@ -117,7 +118,7 @@ const Sidebar1 = ({ children, className, onTabSelect }: Sidebar1Props) => {
     <>
       <SidebarProvider className={cn(className)}>
         <AppSidebar onTabSelect={onTabSelect} />
-        <SidebarTrigger></SidebarTrigger>
+        <SidebarTrigger className="p-2 size-2 w-10 h-10"></SidebarTrigger>
         {children}
       </SidebarProvider>
     </>

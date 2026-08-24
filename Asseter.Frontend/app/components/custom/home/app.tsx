@@ -1,15 +1,13 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "~/context/auth.context";
-import Cookies from "js-cookie";
+import { useState } from "react";
 import { Sidebar1 } from "../ui/sidebar1";
-import { Overview } from "./overview";
 import { Discovery } from "./discovery";
+import { Overview } from "./overview";
 
 export enum SidebarTab {
   OVERVIEW = "overview",
   DISCOVERY = "discovery",
 }
-export type SidebarTabValue = "overview" | "discovery" | "/auth/logout";
+export type SidebarTabValue = "overview" | "discovery";
 
 export function App() {
   const [tab, setTab] = useState<SidebarTabValue>("overview");
