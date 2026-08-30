@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/jesperrichert/asseter:latest
+    image: ghcr.io/jesperrichert/assetory:latest
     volumes:
       - "./storage/:/app/storage/"
     ports:
@@ -22,10 +22,9 @@ services:
     environment:
       POSTGRES_PASSWORD: "password"
       POSTGRES_USER: "root"
-      POSTGRES_DB: "asseter"
+      POSTGRES_DB: "assetory"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
       timeout: 5s
-      retries: 5 
-      
+      retries: 5
