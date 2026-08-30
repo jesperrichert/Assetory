@@ -21,6 +21,7 @@ func NewStorageController(db *gorm.DB, service *services.StorageService) *Storag
 	}
 }
 
+// TODO: FIX SUB FOLDER FILES
 // POST
 func (e *StorageController) Post(ctx *gin.Context) {
 	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), "storage:post")
@@ -31,6 +32,7 @@ func (e *StorageController) Post(ctx *gin.Context) {
 	e.Service.WriteFile(ctx)
 }
 
+// TODO: FIX SUB FOLDER FILES
 // GET
 func (e *StorageController) FileRaw(ctx *gin.Context) {
 	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), "storage:raw")
@@ -42,6 +44,7 @@ func (e *StorageController) FileRaw(ctx *gin.Context) {
 	e.Service.GetFile(ctx, fileName)
 }
 
+// TODO: FIX SUB FOLDER FILES
 // GET
 func (e *StorageController) Get(ctx *gin.Context) {
 	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), "storage:get")
@@ -53,6 +56,7 @@ func (e *StorageController) Get(ctx *gin.Context) {
 	e.Service.GetFileInfo(ctx, fileName)
 }
 
+// TODO: FIX SUB FOLDER FILES
 // DELETE
 func (e *StorageController) Delete(ctx *gin.Context) {
 	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), "storage:delete")
