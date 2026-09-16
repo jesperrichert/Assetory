@@ -1,5 +1,11 @@
 package dto
 
-type SettingsDto struct {
-	AllowRegister []string `json:"allowRegister"` // OIDC, LOCAL
+type SettingsBaseDto[T any] struct {
+	Setting string `json:"setting"`
+	Data    T      `json:"data"`
+}
+
+type SettingPasswordChange struct {
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
 }

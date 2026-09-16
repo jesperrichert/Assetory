@@ -66,8 +66,8 @@ body {
 :root {
   --background: #070709;
   --secondary: #141618;
+  --foreground: #4f5358;
   /*  */
-  --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);

@@ -5,6 +5,7 @@ export type AuthToken = string | null;
 export type UserDto = {
   username: string;
   isOidc: string;
+  permissions: string[];
 } | null;
 
 export type UserSession = {
@@ -30,7 +31,7 @@ export function Auth({ children }: { children: React.ReactNode }) {
         },
       });
       if (data.status != 200) {
-        Cookies.remove("session")
+        Cookies.remove("session");
         window.open("/auth", "_self");
       }
       const res = await data.json();

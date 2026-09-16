@@ -45,8 +45,9 @@ func (e *AuthController) Me(ctx *gin.Context) {
 		"USER",
 		true,
 		dto.UserDto{
-			UserName: apiAccess.User.UserName,
-			IsOidc:   apiAccess.User.IsOidc,
+			UserName:    apiAccess.User.UserName,
+			IsOidc:      apiAccess.User.IsOidc,
+			Permissions: apiAccess.Permissions,
 		},
 	)
 }

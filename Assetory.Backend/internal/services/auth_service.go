@@ -44,7 +44,7 @@ func (e *AuthService) Register(ctx *gin.Context, username string, password strin
 		e.DB.Create(&user)
 		e.DB.Create(&model.APIAccess{
 			User:        &user,
-			Permissions: []string{},
+			Permissions: []string{"settings:user"},
 			Token:       tokenUUID.String(),
 		})
 
@@ -153,7 +153,7 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 		e.DB.Create(&user)
 		e.DB.Create(&model.APIAccess{
 			User:        &user,
-			Permissions: []string{"oidc"},
+			Permissions: []string{"oidc", "settings:user"},
 			Token:       tokenUUID.String(),
 		})
 

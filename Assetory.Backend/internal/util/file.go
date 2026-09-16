@@ -2,20 +2,22 @@ package util
 
 import (
 	"os"
-	"regexp"
+	"strings"
 
 	"jespersen.zip.assetory/internal/dto"
 )
 
-func CheckFile(filePath string) bool {
-	matched, err := regexp.MatchString(`^[a-zA-Z0-9_\-.]+$`, filePath)
-	if err != nil {
+func CheckFileValid(filePath string) bool {
+	if strings.HasPrefix(filePath, "/") {
 		return false
 	}
-	return matched
+	if strings.Contains(filePath, "../") {
+		return false
+	}
+	return true
 }
 
-func MapDirs(data *dto.DiscoveryDto, path string) bool {
+func MapDirs(data *dto.DiscoveryDto, path string) {
 	dir, _ := os.ReadDir(path)
 
 	var files []dto.DiscoveryFileDto
@@ -31,9 +33,9 @@ func MapDirs(data *dto.DiscoveryDto, path string) bool {
 		}
 	}
 
+	folderName := strings.ReplaceAll(path, "/app", "")
 	data.SubFolders = append(data.SubFolders, dto.DiscoveryFolderDto{
-		Name:  path,
+		Name:  strings.ReplaceAll(folderName, "/storage/", ""),
 		Files: files,
 	})
-	return true
 }

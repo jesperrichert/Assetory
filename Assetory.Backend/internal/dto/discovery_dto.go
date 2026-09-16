@@ -1,7 +1,6 @@
 package dto
 
 type DiscoveryDto struct {
-	Files      []DiscoveryFileDto   `json:"files"`
 	SubFolders []DiscoveryFolderDto `json:"folders"`
 }
 

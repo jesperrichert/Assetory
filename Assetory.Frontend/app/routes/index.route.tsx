@@ -3,7 +3,7 @@ import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Assetory App" },
+    { title: "Assetory" },
     { name: "description", content: "Asset Manager for Images, JSON and Static Content" },
   ];
 }

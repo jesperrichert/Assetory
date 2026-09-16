@@ -1,4 +1,12 @@
-import { BookSearch, LayoutDashboard, LogOut } from "lucide-react";
+import {
+  AppWindowIcon,
+  BookSearch,
+  FolderSearch,
+  LayoutDashboard,
+  LogOut,
+  NetworkIcon,
+  SettingsIcon,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -36,14 +44,12 @@ type SidebarData = {
 const sidebarData: SidebarData = {
   navGroups: [
     {
-      title: "Overview",
+      title: "Assetory",
       items: [
-        {
-          label: "Dashboard",
-          icon: LayoutDashboard,
-          tab: "overview",
-        },
-        { label: "Discovery", icon: BookSearch, tab: "discovery" },
+        { label: "Folder Discovery", icon: FolderSearch, tab: "discovery" },
+        { label: "Static Pages", icon: AppWindowIcon, tab: "pages" },
+        { label: "CDN", icon: NetworkIcon, tab: "cdn" },
+        { label: "Settings", icon: SettingsIcon, tab: "settings" },
       ],
     },
   ],
@@ -70,7 +76,7 @@ const AppSidebar = ({
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem
-                    onClick={() => onTabSelect(item.tab ?? SidebarTab.OVERVIEW)}
+                    onClick={() => onTabSelect(item.tab ?? SidebarTab.DISCOVERY)}
                     key={item.label}
                   >
                     <SidebarMenuButton className="cursor-pointer">
@@ -93,7 +99,9 @@ const AppSidebar = ({
             <SidebarMenu>
               {sidebarData.footerGroup.items.map((item) => (
                 <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton>
+                  <SidebarMenuButton
+                    onClick={() => window.open(item.href, "_self")}
+                  >
                     <a href={item.href}>{item.label}</a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
