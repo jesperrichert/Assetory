@@ -32,7 +32,7 @@ func (s Permissions) Permission() string {
 	return permissionsTypeName[s]
 }
 
-func ToAllSettingTypes() []string {
+func AllTypes() []string {
 	var types []string
 	for _, v := range permissionsTypeName {
 		types = append(types, v)

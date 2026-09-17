@@ -16,7 +16,7 @@ func (s ActionsType) String() string {
 	return actionsTypeName[s]
 }
 
-func ToAllSettingTypes() []string {
+func AllTypes() []string {
 	var types []string
 	for _, v := range actionsTypeName {
 		types = append(types, v)

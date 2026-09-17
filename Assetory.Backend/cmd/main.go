@@ -16,6 +16,8 @@ func main() {
 		Config: env,
 	})
 
+	config.DefaultAdminAccountInit(db)
+
 	err := app.Run(":3000")
 	if err != nil {
 		return

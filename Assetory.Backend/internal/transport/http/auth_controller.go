@@ -54,7 +54,9 @@ func (e *AuthController) Me(ctx *gin.Context) {
 
 // POST
 func (e *AuthController) Register(ctx *gin.Context) {
-	if e.Service.Config.AllowRegister == "false" {
+	var settings model.Settings
+	e.DB.First(&settings)
+	if settings.IsRegisterDisabled {
 		util.GenerateResponse(
 			ctx,
 			http.StatusMethodNotAllowed,
@@ -80,6 +82,18 @@ func (e *AuthController) Login(ctx *gin.Context) {
 
 // GET
 func (e *AuthController) Oidc(ctx *gin.Context) {
+	var settings model.Settings
+	e.DB.First(&settings)
+	if settings.IsOidcDisabled {
+		util.GenerateResponse(
+			ctx,
+			http.StatusMethodNotAllowed,
+			"OIDC is Disabled",
+			true,
+			nil,
+		)
+		return
+	}
 	e.Service.Oidc(ctx, ctx.Query("code"))
 }
 
@@ -92,7 +106,10 @@ func (e *AuthController) OidcConfig(ctx *gin.Context) {
 
 // GET
 func (e *AuthController) Config(ctx *gin.Context) {
+	var settings model.Settings
+	e.DB.First(&settings)
 	ctx.JSON(http.StatusOK, gin.H{
-		"showRegister": e.Service.Config.AllowRegister,
+		"showRegister": !settings.IsRegisterDisabled,
+		"showOidc":     !settings.IsOidcDisabled,
 	})
 }

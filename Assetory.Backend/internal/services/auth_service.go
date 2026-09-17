@@ -48,6 +48,7 @@ func (e *AuthService) Register(ctx *gin.Context, username string, password strin
 		e.DB.Create(&user)
 		e.DB.Create(&model.APIAccess{
 			User:        &user,
+			IsApiKey:    false,
 			Permissions: DEFAULT_PERMISSIONS,
 			Token:       tokenUUID.String(),
 		})
@@ -84,12 +85,13 @@ func (e *AuthService) Login(ctx *gin.Context, username string, password string) 
 		}
 
 		tokenUUID := uuid.New()
-		var apiAccess model.APIAccess
-		e.DB.Where("user_id = ?", user.ID).First(&apiAccess)
-
-		apiAccess.Permissions = user.Permissions
-		apiAccess.Token = tokenUUID.String()
-		e.DB.Updates(&apiAccess)
+		apiAccess := model.APIAccess{
+			UserId:      int(user.ID),
+			IsApiKey:    false,
+			Permissions: user.Permissions,
+			Token:       tokenUUID.String(),
+		}
+		e.DB.Create(&apiAccess)
 		util.GenerateAuthRedirect(
 			ctx,
 			tokenUUID.String(),
@@ -149,6 +151,7 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 
 	var user model.User
 	tokenUUID := uuid.New()
+	// TODO: Add Scope Support - EMAIL, ... (Curr: PreferredUsername)
 	e.DB.Where("user_name = ?", userInfo.PreferredUsername).First(&user)
 	if len(user.UserName) == 0 && len(userInfo.PreferredUsername) != 0 {
 		user.AccessToken = tokenData.AccessToken
@@ -159,6 +162,7 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 		e.DB.Create(&user)
 		e.DB.Create(&model.APIAccess{
 			User:        &user,
+			IsApiKey:    false,
 			Permissions: append(DEFAULT_PERMISSIONS, permissions.OIDC.Permission()),
 			Token:       tokenUUID.String(),
 		})
@@ -170,20 +174,13 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 		)
 		return
 	} else {
-		var apiAccess model.APIAccess
-		e.DB.Where("user_id = ?", user.ID).First(&apiAccess)
-		if len(apiAccess.Token) == 0 {
-			util.GenerateAuthRedirect(
-				ctx,
-				"Failed to fetch user from OIDC Provider",
-				true,
-			)
-			return
+		apiAccess := model.APIAccess{
+			UserId:      int(user.ID),
+			IsApiKey:    false,
+			Permissions: user.Permissions,
+			Token:       tokenUUID.String(),
 		}
-
-		apiAccess.Permissions = user.Permissions
-		apiAccess.Token = tokenUUID.String()
-		e.DB.Updates(&apiAccess)
+		e.DB.Create(&apiAccess)
 		util.GenerateAuthRedirect(
 			ctx,
 			tokenUUID.String(),
