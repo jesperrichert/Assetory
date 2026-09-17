@@ -1,15 +1,11 @@
 package env
 
-import (
-	"jespersen.zip.assetory/internal/util"
-)
-
 type Config struct {
-	AllowRegister string
+	// AllowRegister string MOVED TO DB
 }
 
 func NewConfig() *Config {
 	return &Config{
-		AllowRegister: util.EnvToConfigValue("ALLOW_REGISTER", "true"),
+		// AllowRegister: util.EnvToConfigValue("ALLOW_REGISTER", "true"),
 	}
 }

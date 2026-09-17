@@ -34,6 +34,6 @@ func (c *DataController) Permissions(ctx *gin.Context) {
 		http.StatusOK,
 		"PERMISSIONS_DATA",
 		false,
-		permissions.ToAllSettingTypes(),
+		permissions.AllTypes(),
 	)
 }

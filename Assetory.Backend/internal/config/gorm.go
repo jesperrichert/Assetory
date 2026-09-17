@@ -16,8 +16,14 @@ func NewDatabase() *gorm.DB {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
-	if err := db.AutoMigrate(&model.User{}, &model.APIAccess{}); err != nil {
+	if err := db.AutoMigrate(&model.User{}, &model.APIAccess{}, &model.Settings{}); err != nil {
 		log.Fatalf("failed to migrate: %v", err)
+	}
+
+	var settings model.Settings
+	db.First(&settings)
+	if settings.ID == 0 {
+		db.Create(&settings)
 	}
 
 	return db
