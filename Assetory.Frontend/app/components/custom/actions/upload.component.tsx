@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/dialog";
 import { parseFileName } from "~/utils/files";
 import { Button } from "~/components/ui/button";
+import { toast } from "sonner";
 
 export type UploadDialogProps = {
   title: string;
@@ -43,8 +44,12 @@ export function UploadDialog(prps: UploadDialogProps) {
         body: formData,
       });
       if (req.status == 200) {
+        toast("File uploaded successfully");
         prps.refresh();
         prps.onClose();
+      } else {
+        const json = await req.json();
+        toast(`Failed with Code: ${json.message}`);
       }
     }
   };

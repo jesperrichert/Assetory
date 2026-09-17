@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { DotIcon } from "lucide-react";
+import { toast } from "sonner";
 
 type DefaultEditorProps = {
   isOpen: boolean;
@@ -64,6 +65,10 @@ export function DefaultEditor(props: DefaultEditorProps) {
     if (req.status == 200) {
       setCanSave(false);
       props.refresh();
+      toast("File saved successfully");
+    } else {
+      const json = await req.json();
+      toast(`Failed with Code: ${json.message}`);
     }
   };
 

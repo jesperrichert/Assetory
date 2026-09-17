@@ -15,8 +15,11 @@ import (
 	"jespersen.zip.assetory/internal/dto"
 	"jespersen.zip.assetory/internal/env"
 	"jespersen.zip.assetory/internal/model"
+	"jespersen.zip.assetory/internal/types/permissions"
 	"jespersen.zip.assetory/internal/util"
 )
+
+var DEFAULT_PERMISSIONS []string = []string{permissions.SettingsUser.Permission()}
 
 type AuthService struct {
 	Config *env.Config
@@ -40,11 +43,12 @@ func (e *AuthService) Register(ctx *gin.Context, username string, password strin
 		user.IsOidc = false
 		user.UserName = username
 		user.Password = string(hash)
+		user.Permissions = DEFAULT_PERMISSIONS
 
 		e.DB.Create(&user)
 		e.DB.Create(&model.APIAccess{
 			User:        &user,
-			Permissions: []string{"settings:user"},
+			Permissions: DEFAULT_PERMISSIONS,
 			Token:       tokenUUID.String(),
 		})
 
@@ -83,6 +87,7 @@ func (e *AuthService) Login(ctx *gin.Context, username string, password string) 
 		var apiAccess model.APIAccess
 		e.DB.Where("user_id = ?", user.ID).First(&apiAccess)
 
+		apiAccess.Permissions = user.Permissions
 		apiAccess.Token = tokenUUID.String()
 		e.DB.Updates(&apiAccess)
 		util.GenerateAuthRedirect(
@@ -149,11 +154,12 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 		user.AccessToken = tokenData.AccessToken
 		user.IsOidc = true
 		user.UserName = userInfo.PreferredUsername
+		user.Permissions = []string{permissions.OIDC.Permission(), permissions.SettingsUser.Permission()}
 
 		e.DB.Create(&user)
 		e.DB.Create(&model.APIAccess{
 			User:        &user,
-			Permissions: []string{"oidc", "settings:user"},
+			Permissions: append(DEFAULT_PERMISSIONS, permissions.OIDC.Permission()),
 			Token:       tokenUUID.String(),
 		})
 
@@ -175,6 +181,7 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 			return
 		}
 
+		apiAccess.Permissions = user.Permissions
 		apiAccess.Token = tokenUUID.String()
 		e.DB.Updates(&apiAccess)
 		util.GenerateAuthRedirect(

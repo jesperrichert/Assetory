@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { parseFileName } from "~/utils/files";
+import { toast } from "sonner";
 
 export type FileDeleteProps = {
   isOpen: boolean;
@@ -33,7 +34,7 @@ export function FileDelete(prps: FileDeleteProps) {
         },
       },
     );
-
+    toast("File deleted successfully");
     prps.onClose();
   };
 

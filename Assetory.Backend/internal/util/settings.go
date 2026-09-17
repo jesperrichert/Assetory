@@ -7,7 +7,7 @@ import (
 	"jespersen.zip.assetory/internal/dto"
 )
 
-func RetunSettingsSchemaForSetting[T any](ctx *gin.Context, body dto.SettingsBaseDto[T]) {
+func RetunSettingsSchemaForSetting[T any](ctx *gin.Context, body dto.ActionsBaseDto[T]) {
 	GenerateResponse(
 		ctx,
 		http.StatusBadRequest,

@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"jespersen.zip.assetory/internal/services"
+	"jespersen.zip.assetory/internal/types/permissions"
 	"jespersen.zip.assetory/internal/util"
 )
 
@@ -23,7 +24,7 @@ func NewStorageController(db *gorm.DB, service *services.StorageService) *Storag
 
 // POST
 func (e *StorageController) Post(ctx *gin.Context) {
-	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), "storage:post")
+	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), permissions.StoragePost.Permission())
 	if !isVaild {
 		util.GenerateResponse(ctx, http.StatusUnauthorized, "No Session found.", true, nil)
 		return
@@ -39,7 +40,7 @@ func (e *StorageController) FileRaw(ctx *gin.Context) {
 
 // GET
 func (e *StorageController) Get(ctx *gin.Context) {
-	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), "storage:get")
+	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), permissions.StorageGet.Permission())
 	if !isVaild {
 		util.GenerateResponse(ctx, http.StatusUnauthorized, "No Session found.", true, nil)
 		return
@@ -50,7 +51,7 @@ func (e *StorageController) Get(ctx *gin.Context) {
 
 // DELETE
 func (e *StorageController) Delete(ctx *gin.Context) {
-	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), "storage:delete")
+	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), permissions.StorageDelete.Permission())
 	if !isVaild {
 		util.GenerateResponse(ctx, http.StatusUnauthorized, "No Session found.", true, nil)
 		return
@@ -61,7 +62,7 @@ func (e *StorageController) Delete(ctx *gin.Context) {
 
 // GET
 func (e *StorageController) Discovery(ctx *gin.Context) {
-	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), "storage:discovery")
+	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), permissions.StorageDiscovery.Permission())
 	if !isVaild {
 		util.GenerateResponse(ctx, http.StatusUnauthorized, "No Session found.", true, nil)
 		return

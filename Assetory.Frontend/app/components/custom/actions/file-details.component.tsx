@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/dialog";
 import { parseFileName } from "~/utils/files";
 import { fileIcon } from "../discovery/files.component";
+import { toast } from "sonner";
 
 export type FileDetailsProps = {
   isOpen: boolean;
@@ -45,6 +46,7 @@ export function FileDetails(prps: FileDetailsProps) {
       );
       if (data.status != 200) return;
       const json = await data.json();
+      toast("File details fetched successfully");
       setFileInfo(json.data as FileDetails);
     }
     f();

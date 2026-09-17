@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { Auth } from "./context/auth.context";
+import { Toaster } from "sonner";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -30,14 +31,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="/Assetory.png" rel="icon"/>
+        <link href="/Assetory.png" rel="icon" />
         <Meta />
         <Links />
       </head>
       <body>
-        <Auth>
-          {children}
-        </Auth>
+        <Auth>{children}</Auth>
+        <Toaster theme="dark" />
         <ScrollRestoration />
         <Scripts />
       </body>

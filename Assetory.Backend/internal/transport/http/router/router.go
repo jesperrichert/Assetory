@@ -14,7 +14,8 @@ type RouterConfig struct {
 	DB                *gorm.DB
 	AuthController    *http.AuthController
 	StorageController *http.StorageController
-	SetingsController *http.SetingsController
+	ActionsController *http.ActionsController
+	DataController    *http.DataController
 }
 
 func (c *RouterConfig) Setup() {
@@ -36,7 +37,13 @@ func (c *RouterConfig) Setup() {
 			auth.GET("/config", c.AuthController.Config)
 		}
 
-		api.POST("/settings", authMiddleware.Handle, c.SetingsController.Post)
+		data := api.Group("/data")
+		{
+			data.GET("/permissions", authMiddleware.Handle, c.DataController.Permissions)
+		}
+
+		api.POST("/actions", authMiddleware.Handle, c.ActionsController.Post)
+
 		api.GET("/storage", authMiddleware.Handle, c.StorageController.Discovery)
 		api.POST("/storage", authMiddleware.Handle, c.StorageController.Post)
 		api.GET("/storage/:fileName", authMiddleware.Handle, c.StorageController.Get)

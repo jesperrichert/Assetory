@@ -20,19 +20,22 @@ func Build(config *Appconfig) {
 	//Register Services
 	authService := services.NewAuthService(config.DB, config.Config)
 	storageService := services.NewStorageService(config.Config)
-	settingsService := services.NewSetingsService(config.DB, config.Config)
+	settingsService := services.NewActionsService(config.DB, config.Config)
+	dataService := services.NewDataService(config.DB, config.Config)
 
 	//Register Controller
 	authController := http.NewAuthController(config.DB, authService)
 	storageController := http.NewStorageController(config.DB, storageService)
-	settingsController := http.NewSetingsController(config.DB, settingsService)
+	settingsController := http.NewActionsController(config.DB, settingsService)
+	dataController := http.NewDataController(config.DB, dataService)
 
 	routeConfig := router.RouterConfig{
 		App:               config.App,
 		DB:                config.DB,
 		AuthController:    authController,
 		StorageController: storageController,
-		SetingsController: settingsController,
+		ActionsController: settingsController,
+		DataController:    dataController,
 		Config:            config.Config,
 	}
 

@@ -1,5 +1,6 @@
 import { PasswordIcon } from "@phosphor-icons/react";
 import { useContext, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -16,7 +17,7 @@ export function ChangePasswordSetting() {
   const [oldPassword, setOldPassword] = useState<string | null>(null);
 
   const handle = async () => {
-    const req = await fetch("/api/settings", {
+    const req = await fetch("/api/actions", {
       method: "POST",
       headers: {
         Authorization: authContext?.session ?? "",
@@ -30,13 +31,17 @@ export function ChangePasswordSetting() {
       }),
     });
     if (req.status == 200) {
+      toast("Password changed successfully");
       setOpen(false);
+    } else {
+      const json = await req.json()
+      toast(`Failed with Code: ${json.message}`)
     }
   };
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant={"outline"}>
+      <Button onClick={() => setOpen(true)} variant={"outline"} className="cursor-pointer">
         <PasswordIcon />
         <span>Change Password</span>
       </Button>

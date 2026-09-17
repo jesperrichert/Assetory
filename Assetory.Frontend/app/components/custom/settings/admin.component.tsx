@@ -10,5 +10,5 @@ export function AdminSettings() {
   )
     return;
 
-  return <>Admin</>;
+  return <div className="grid grid-cols-6"></div>;
 }
