@@ -36,7 +36,7 @@ func (e *ActionsController) Post(ctx *gin.Context) {
 			http.StatusBadRequest,
 			"INVALID_SETTING_ID",
 			true,
-			actions.ToAllSettingTypes(),
+			actions.AllTypes(),
 		)
 	}
 

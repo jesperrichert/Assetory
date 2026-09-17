@@ -9,5 +9,5 @@ type User struct {
 	Password    string
 	IsOidc      bool
 	Permissions []string `gorm:"serializer:json"`
-	APIAccess   *APIAccess
+	APIAccess   *[]APIAccess
 }

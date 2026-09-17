@@ -7,14 +7,16 @@ import { Register } from "~/components/custom/auth/register.component";
 export default function AuthPage() {
   const [tab, setTab] = useState<"register" | "login">("login");
   // const [message, setMessage] = useState<string>();
-  const [showRegister, setShowRegister] = useState<string>("false");
+  const [showRegister, setShowRegister] = useState<boolean>(false);
+  const [showOidc, setShowOidc] = useState<boolean>(false);
 
   useEffect(() => {
     async function config() {
       const res = await fetch("/api/auth/config");
-      if (res.status != 200) return setShowRegister("false");
+      if (res.status != 200) return setShowRegister(false);
       const json = await res.json();
       setShowRegister(json.showRegister);
+      setShowOidc(json.showOidc);
     }
     config();
     handleAuthCallback();
@@ -40,7 +42,7 @@ export default function AuthPage() {
             >
               Login
             </button>
-            {showRegister == "true" ? (
+            {showRegister ? (
               <button
                 className="border-2 p-2 cursor-pointer"
                 onClick={() => setTab("register")}
@@ -55,7 +57,7 @@ export default function AuthPage() {
             {tab == "login" ? (
               <Login></Login>
             ) : tab == "register" ? (
-              showRegister == "true" ? (
+              showRegister ? (
                 <Register></Register>
               ) : (
                 <></>
@@ -66,9 +68,7 @@ export default function AuthPage() {
           </div>
         </div>
         <hr className="p-2"></hr>
-        <span>
-          <Oidc></Oidc>
-        </span>
+        <span>{showOidc && <Oidc></Oidc>}</span>
       </div>
     </>
   );
