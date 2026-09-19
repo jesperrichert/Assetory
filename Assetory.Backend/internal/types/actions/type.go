@@ -9,10 +9,10 @@ const (
 
 var actionsTypeName = map[ActionsType]string{
 	PasswordChange:   "password_change",
-	PermissionChange: "permissions_change",
+	PermissionChange: "permission_change",
 }
 
-func (s ActionsType) String() string {
+func (s ActionsType) Action() string {
 	return actionsTypeName[s]
 }
 

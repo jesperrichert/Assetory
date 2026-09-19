@@ -1,25 +1,27 @@
 package permissions
 
+import "strings"
+
 type Permissions int
 
 const (
+	Star                Permissions = iota
+	DataUsers           Permissions = iota
 	DataPermissions     Permissions = iota
+	DataUserPermissions Permissions = iota
 	PermissionChange    Permissions = iota
 	StoragePost         Permissions = iota
 	StorageGet          Permissions = iota
 	StorageDelete       Permissions = iota
 	StorageDiscovery    Permissions = iota
-	SettingsUser        Permissions = iota
-	SettingsApplication Permissions = iota
-	SettingsAdmin       Permissions = iota
 	OIDC                Permissions = iota
 )
 
 var permissionsTypeName = map[Permissions]string{
+	Star:                "*:*",
+	DataUserPermissions: "data:user_permissions",
 	OIDC:                "oidc",
-	SettingsAdmin:       "settings:admin",
-	SettingsApplication: "settings:application",
-	SettingsUser:        "settings:user",
+	DataUsers:           "data:users",
 	StorageDiscovery:    "storage:discovery",
 	StorageDelete:       "storage:delete",
 	StorageGet:          "storage:get",
@@ -36,6 +38,16 @@ func AllTypes() []string {
 	var types []string
 	for _, v := range permissionsTypeName {
 		types = append(types, v)
+	}
+	return types
+}
+
+func AllTypesWithOutSpecial() []string {
+	var types []string
+	for _, v := range permissionsTypeName {
+		if strings.Contains(v, ":") {
+			types = append(types, v)
+		}
 	}
 	return types
 }

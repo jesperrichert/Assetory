@@ -2,12 +2,16 @@ package services
 
 import (
 	"net/http"
+	"slices"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"jespersen.zip.assetory/internal/dto"
 	"jespersen.zip.assetory/internal/env"
+	"jespersen.zip.assetory/internal/model"
+	"jespersen.zip.assetory/internal/types/permissions"
 	"jespersen.zip.assetory/internal/util"
 )
 
@@ -61,6 +65,96 @@ func (s *ActionsService) PasswordChange(ctx *gin.Context, oldPassword string, ne
 	)
 }
 
-func (s *ActionsService) PermissionsChange(ctx *gin.Context, data dto.ActionPermissionChange) {
+func (s *ActionsService) PermissionsChange(ctx *gin.Context, currentUser *model.User, data dto.ActionPermissionChange) {
+	var user model.User
+	s.DB.Where("id = ?", data.UserId).Preload("APIAccess").First(&user)
+	if len(user.UserName) <= 0 {
+		util.GenerateResponse(
+			ctx,
+			http.StatusNotFound,
+			"NO_USER",
+			true,
+			nil,
+		)
+		return
+	}
 
+	if user.ID == currentUser.ID {
+		util.GenerateResponse(
+			ctx,
+			http.StatusBadRequest,
+			"CAN_NOT_CHANGE_YOURSELF",
+			true,
+			nil,
+		)
+		return
+	}
+
+	perms := data.Permissions
+	for _, p := range perms {
+		if !strings.Contains(p, ":") {
+			println(p)
+			util.GenerateResponse(
+				ctx,
+				http.StatusBadRequest,
+				"NOT_ASSIGNABLE",
+				true,
+				nil,
+			)
+			return
+		}
+		if !slices.Contains(permissions.AllTypes(), p) {
+			util.GenerateResponse(
+				ctx,
+				http.StatusBadRequest,
+				"ONE_OR_MANY_PERMISSIONS_NOT_FOUND",
+				true,
+				nil,
+			)
+			return
+		}
+		if !slices.Contains(currentUser.Permissions, p) &&
+			!slices.Contains(currentUser.Permissions, permissions.Star.Permission()) {
+			util.GenerateResponse(
+				ctx,
+				http.StatusUnauthorized,
+				"CAN_NOT_GIVE_PERMISSION",
+				true,
+				nil,
+			)
+			return
+		}
+	}
+
+	for _, p := range perms {
+		if !strings.Contains(p, ":") {
+			perms = append(perms, p)
+		}
+	}
+	user.Permissions = perms
+	s.DB.Updates(&user)
+
+	for _, apiAccess := range *user.APIAccess {
+		accessPerms := perms
+		if apiAccess.IsApiKey {
+			hasStar := slices.Contains(user.Permissions, permissions.Star.Permission())
+			apiAccess.Permissions = slices.DeleteFunc(apiAccess.Permissions, func(p string) bool {
+				if slices.Contains(accessPerms, p) {
+					return false
+				}
+				return !hasStar
+			})
+		} else {
+			apiAccess.Permissions = accessPerms
+		}
+		s.DB.Updates(&apiAccess)
+	}
+
+	util.GenerateResponse(
+		ctx,
+		http.StatusOK,
+		"PERMISSION_CHANGED",
+		false,
+		nil,
+	)
 }

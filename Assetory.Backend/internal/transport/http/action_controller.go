@@ -34,14 +34,15 @@ func (e *ActionsController) Post(ctx *gin.Context) {
 		util.GenerateResponse(
 			ctx,
 			http.StatusBadRequest,
-			"INVALID_SETTING_ID",
+			"INVALID_ACTION_ID",
 			true,
 			actions.AllTypes(),
 		)
+		return
 	}
 
-	switch baseBody.Setting {
-	case actions.PasswordChange.String():
+	switch baseBody.Action {
+	case actions.PasswordChange.Action():
 		{
 			var body dto.ActionsBaseDto[dto.ActionPasswordChange]
 			err = ctx.ShouldBindBodyWithJSON(&body)
@@ -51,9 +52,9 @@ func (e *ActionsController) Post(ctx *gin.Context) {
 			}
 			e.Service.PasswordChange(ctx, body.Data.OldPassword, body.Data.NewPassword)
 		}
-	case actions.PermissionChange.String():
+	case actions.PermissionChange.Action():
 		{
-			isValid, _ := util.Permission(*e.DB, session, permissions.PermissionChange.Permission())
+			isValid, user := util.Permission(*e.DB, session, permissions.PermissionChange.Permission())
 			if !isValid {
 				util.GenerateResponse(
 					ctx,
@@ -71,7 +72,17 @@ func (e *ActionsController) Post(ctx *gin.Context) {
 				util.RetunSettingsSchemaForSetting(ctx, body)
 				return
 			}
-			e.Service.PermissionsChange(ctx, body.Data)
+			e.Service.PermissionsChange(ctx, user, body.Data)
+		}
+	default:
+		{
+			util.GenerateResponse(
+				ctx,
+				http.StatusBadRequest,
+				"INVALID_SETTING_ID",
+				true,
+				actions.AllTypes(),
+			)
 		}
 	}
 

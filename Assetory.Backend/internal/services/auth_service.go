@@ -19,7 +19,7 @@ import (
 	"jespersen.zip.assetory/internal/util"
 )
 
-var DEFAULT_PERMISSIONS []string = []string{permissions.SettingsUser.Permission()}
+var DEFAULT_PERMISSIONS []string = []string{}
 
 type AuthService struct {
 	Config *env.Config
@@ -157,7 +157,7 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 		user.AccessToken = tokenData.AccessToken
 		user.IsOidc = true
 		user.UserName = userInfo.PreferredUsername
-		user.Permissions = []string{permissions.OIDC.Permission(), permissions.SettingsUser.Permission()}
+		user.Permissions = append(DEFAULT_PERMISSIONS, permissions.OIDC.Permission())
 
 		e.DB.Create(&user)
 		e.DB.Create(&model.APIAccess{

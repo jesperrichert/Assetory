@@ -23,7 +23,7 @@ export function ChangePasswordSetting() {
         Authorization: authContext?.session ?? "",
       },
       body: JSON.stringify({
-        setting: "password_change",
+        action: "password_change",
         data: {
           old_password: oldPassword,
           new_password: newPassword,

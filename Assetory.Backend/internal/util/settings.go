@@ -11,7 +11,7 @@ func RetunSettingsSchemaForSetting[T any](ctx *gin.Context, body dto.ActionsBase
 	GenerateResponse(
 		ctx,
 		http.StatusBadRequest,
-		"INVALID_SETTING_DATA",
+		"INVALID_ACTION_DATA",
 		true,
 		body,
 	)
