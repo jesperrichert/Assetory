@@ -22,7 +22,6 @@ export function Settings({ tab }: { tab: string }) {
       <Tabs defaultValue="user" className="w-full p-3">
         <TabsList>
           {Object.values(SettingsTab).map((tab) => {
-            console.log(tab);
             if (!authContext?.user?.permissions.includes("settings:" + tab))
               return;
 

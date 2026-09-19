@@ -1,8 +1,8 @@
 package dto
 
 type ActionsBaseDto[T any] struct {
-	Setting string `json:"setting"`
-	Data    T      `json:"data"`
+	Action string `json:"action"`
+	Data   T      `json:"data"`
 }
 
 type ActionPasswordChange struct {
@@ -11,6 +11,6 @@ type ActionPasswordChange struct {
 }
 
 type ActionPermissionChange struct {
-	UserId      string   `json:"user_id"`
+	UserId      int      `json:"user_id"`
 	Permissions []string `json:"permissions"`
 }

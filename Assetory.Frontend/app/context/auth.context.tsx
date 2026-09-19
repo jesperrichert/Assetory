@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 
 export type AuthToken = string | null;
 export type UserDto = {
+  id: number;
   username: string;
   isOidc: string;
   permissions: string[];
