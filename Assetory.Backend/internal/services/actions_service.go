@@ -158,3 +158,21 @@ func (s *ActionsService) PermissionsChange(ctx *gin.Context, currentUser *model.
 		nil,
 	)
 }
+
+func (s *ActionsService) EditAuthSettings(ctx *gin.Context, data dto.ActionEditAuth) {
+	var settings model.Settings
+	s.DB.First(&settings)
+
+	settings.IsOidcDisabled = data.IsOidcDisabled
+	settings.IsOidcRegistrationDisabled = data.IsOidcRegistrationDisabled
+	settings.IsRegisterDisabled = data.IsRegisterDisabled
+
+	s.DB.Save(&settings)
+	util.GenerateResponse(
+		ctx,
+		http.StatusOK,
+		"AUTH_SETTINGS_CHANGED",
+		false,
+		nil,
+	)
+}

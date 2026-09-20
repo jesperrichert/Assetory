@@ -124,11 +124,8 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 	client := &http.Client{}
 	r, err := http.NewRequest("POST", issuer.TokenEndpoint, strings.NewReader(urlData.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
 	res, err := client.Do(r)
-
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 	defer res.Body.Close()
@@ -141,7 +138,6 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 	r.Header.Add("Authorization", "Bearer "+tokenData.AccessToken)
 	userCheck, err := client.Do(r)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 	defer userCheck.Body.Close()
@@ -154,6 +150,20 @@ func (e *AuthService) Oidc(ctx *gin.Context, code string) {
 	// TODO: Add Scope Support - EMAIL, ... (Curr: PreferredUsername)
 	e.DB.Where("user_name = ?", userInfo.PreferredUsername).First(&user)
 	if len(user.UserName) == 0 && len(userInfo.PreferredUsername) != 0 {
+
+		var settings model.Settings
+		e.DB.First(&settings)
+		if settings.IsOidcRegistrationDisabled {
+			util.GenerateResponse(
+				ctx,
+				http.StatusForbidden,
+				"REGISTRATION_DISABLED",
+				true,
+				nil,
+			)
+			return
+		}
+
 		user.AccessToken = tokenData.AccessToken
 		user.IsOidc = true
 		user.UserName = userInfo.PreferredUsername

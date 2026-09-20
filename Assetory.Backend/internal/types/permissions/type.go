@@ -8,6 +8,7 @@ const (
 	Star                Permissions = iota
 	DataUsers           Permissions = iota
 	DataPermissions     Permissions = iota
+	DataAuthSettings    Permissions = iota
 	DataUserPermissions Permissions = iota
 	PermissionChange    Permissions = iota
 	StoragePost         Permissions = iota
@@ -15,9 +16,12 @@ const (
 	StorageDelete       Permissions = iota
 	StorageDiscovery    Permissions = iota
 	OIDC                Permissions = iota
+	EditAuth            Permissions = iota
 )
 
 var permissionsTypeName = map[Permissions]string{
+	DataAuthSettings:    "data:auth",
+	EditAuth:            "action:edit_auth",
 	Star:                "*:*",
 	DataUserPermissions: "data:user_permissions",
 	OIDC:                "oidc",

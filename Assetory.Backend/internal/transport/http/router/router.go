@@ -40,6 +40,7 @@ func (c *RouterConfig) Setup() {
 		data := api.Group("/data")
 		{
 			data.GET("/permissions", authMiddleware.Handle, c.DataController.Permissions)
+			data.GET("/auth", authMiddleware.Handle, c.DataController.AuthSettings)
 			data.GET("/users", authMiddleware.Handle, c.DataController.Users)
 			data.GET("/users/:userId/permissions", authMiddleware.Handle, c.DataController.UserPermissions)
 		}

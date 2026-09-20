@@ -74,6 +74,28 @@ func (e *ActionsController) Post(ctx *gin.Context) {
 			}
 			e.Service.PermissionsChange(ctx, user, body.Data)
 		}
+	case actions.EditAuth.Action():
+		{
+			isValid, _ := util.Permission(*e.DB, session, permissions.EditAuth.Permission())
+			if !isValid {
+				util.GenerateResponse(
+					ctx,
+					http.StatusUnauthorized,
+					"Unauthorized",
+					true,
+					nil,
+				)
+				return
+			}
+
+			var body dto.ActionsBaseDto[dto.ActionEditAuth]
+			err = ctx.ShouldBindBodyWithJSON(&body)
+			if err != nil {
+				util.RetunSettingsSchemaForSetting(ctx, body)
+				return
+			}
+			e.Service.EditAuthSettings(ctx, body.Data)
+		}
 	default:
 		{
 			util.GenerateResponse(
