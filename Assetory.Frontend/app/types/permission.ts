@@ -1,4 +1,6 @@
 export enum Permission {
+  DataAuthSettings = "data:auth",
+  EditAuth = "action:edit_auth",
   Star = "*:*",
   DataUserPermissions = "data:user_permissions",
   OIDC = "oidc",

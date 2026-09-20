@@ -41,6 +41,32 @@ func (c *DataController) Permissions(ctx *gin.Context) {
 	)
 }
 
+func (c *DataController) AuthSettings(ctx *gin.Context) {
+	isVaild, _ := util.Permissions(*c.DB, util.GetSettionID(ctx), []string{
+		permissions.DataAuthSettings.Permission(),
+		permissions.EditAuth.Permission(),
+	})
+	if !isVaild {
+		util.GenerateResponse(ctx, http.StatusUnauthorized, "No Session found.", true, nil)
+		return
+	}
+
+	var settings model.Settings
+	c.DB.First(&settings)
+
+	util.GenerateResponse(
+		ctx,
+		http.StatusOK,
+		"AUTH_DATA",
+		false,
+		dto.AuthSettingsDto{
+			IsRegisterDisabled:         settings.IsRegisterDisabled,
+			IsOidcDisabled:             settings.IsOidcDisabled,
+			IsOidcRegistrationDisabled: settings.IsOidcRegistrationDisabled,
+		},
+	)
+}
+
 func (c *DataController) Users(ctx *gin.Context) {
 	isVaild, _ := util.Permissions(*c.DB, util.GetSettionID(ctx), []string{
 		permissions.DataPermissions.Permission(),
