@@ -5,11 +5,11 @@ import { Settings } from "../settings/settings.component";
 
 export enum SidebarTab {
   DISCOVERY = "discovery",
-  PAGES = "pages",
+  CONTENT = "content",
   CDN = "cdn",
   SETTINGS = "settings",
 }
-export type SidebarTabValue = "discovery" | "pages" | "cdn" | "settings";
+export type SidebarTabValue = "discovery" | "content" | "cdn" | "settings";
 
 export function App() {
   const [tab, setTab] = useState<SidebarTabValue>("discovery");

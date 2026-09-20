@@ -47,7 +47,7 @@ const sidebarData: SidebarData = {
       title: "Assetory",
       items: [
         { label: "Folder Discovery", icon: FolderSearch, tab: "discovery" },
-        { label: "Static Pages", icon: AppWindowIcon, tab: "pages" },
+        { label: "Static Content", icon: AppWindowIcon, tab: "content" },
         { label: "CDN", icon: NetworkIcon, tab: "cdn" },
         { label: "Settings", icon: SettingsIcon, tab: "settings" },
       ],
