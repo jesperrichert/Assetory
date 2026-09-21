@@ -23,13 +23,13 @@ func (c *RouterConfig) Setup() {
 		c.App = gin.Default()
 	}
 
-	authMiddleware := middleware.NewAuthMiddleware(c.DB)
+	sessionMiddleware := middleware.NewSessionMiddleware(c.DB)
 
 	api := c.App.Group("/api")
 	{
 		auth := api.Group("/auth")
 		{
-			auth.GET("/@me", authMiddleware.Handle, c.AuthController.Me)
+			auth.GET("/@me", sessionMiddleware.Handle, c.AuthController.Me)
 			auth.POST("/login", c.AuthController.Login)
 			auth.POST("/register", c.AuthController.Register)
 			auth.GET("/oidc/callback", c.AuthController.Oidc)
@@ -37,22 +37,31 @@ func (c *RouterConfig) Setup() {
 			auth.GET("/config", c.AuthController.Config)
 		}
 
-		data := api.Group("/data")
+		api.POST("/actions", sessionMiddleware.Handle, c.ActionsController.Post)
+
+		content := api.Group("/content")
 		{
-			data.GET("/permissions", authMiddleware.Handle, c.DataController.Permissions)
-			data.GET("/auth", authMiddleware.Handle, c.DataController.AuthSettings)
-			data.GET("/users", authMiddleware.Handle, c.DataController.Users)
-			data.GET("/users/:userId/permissions", authMiddleware.Handle, c.DataController.UserPermissions)
+			content.POST("/", sessionMiddleware.Handle)
 		}
 
-		api.POST("/actions", authMiddleware.Handle, c.ActionsController.Post)
+		data := api.Group("/data")
+		{
+			data.GET("/permissions", sessionMiddleware.Handle, c.DataController.Permissions)
+			data.GET("/auth", sessionMiddleware.Handle, c.DataController.AuthSettings)
+			data.GET("/users", sessionMiddleware.Handle, c.DataController.Users)
+			data.GET("/users/:userId/permissions", sessionMiddleware.Handle, c.DataController.UserPermissions)
+		}
 
-		api.GET("/storage", authMiddleware.Handle, c.StorageController.Discovery)
-		api.POST("/storage", authMiddleware.Handle, c.StorageController.Post)
-		api.GET("/storage/:fileName", authMiddleware.Handle, c.StorageController.Get)
-		// TODO: Add access permissions
-		api.GET("/storage/:fileName/raw", c.StorageController.FileRaw)
-		api.DELETE("/storage/:fileName", authMiddleware.Handle, c.StorageController.Delete)
+		storage := api.Group("/storage")
+		{
+			storage.GET("/", sessionMiddleware.Handle, c.StorageController.Discovery)
+			storage.POST("/storage", sessionMiddleware.Handle, c.StorageController.Post)
+
+			storage.GET("/storage/:fileName", sessionMiddleware.Handle, c.StorageController.Get)
+			storage.GET("/storage/:fileName/raw", sessionMiddleware.Handle, c.StorageController.FileRaw)
+			storage.DELETE("/storage/:fileName", sessionMiddleware.Handle, c.StorageController.Delete)
+		}
+
 	}
 
 }

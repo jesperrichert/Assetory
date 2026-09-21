@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Sidebar1 } from "../navigation/sidebar.component";
 import { Discovery } from "./folder-discovery.component";
 import { Settings } from "../settings/settings.component";
-import { StaticContent } from "./static-content.component";
+import { AuthContext } from "~/context/auth.context";
 
 export enum SidebarTab {
   DISCOVERY = "discovery",
@@ -12,18 +12,13 @@ export enum SidebarTab {
 }
 export type SidebarTabValue = "discovery" | "content" | "cdn" | "settings";
 
-export function App() {
-  const [tab, setTab] = useState<SidebarTabValue>("discovery");
+export function StaticContent({ tab }: { tab: SidebarTabValue }) {
+  if (tab != SidebarTab.CONTENT) return;
+  const authContext = useContext(AuthContext);
 
   return (
     <div>
-      <div>
-        <Sidebar1 onTabSelect={(tab: SidebarTabValue) => setTab(tab)}>
-          <Discovery tab={tab} />
-          <StaticContent tab={tab}/>
-          <Settings tab={tab} />
-        </Sidebar1>
-      </div>
+      Content
     </div>
   );
 }

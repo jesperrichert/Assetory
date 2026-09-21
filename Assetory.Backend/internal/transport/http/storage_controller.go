@@ -34,6 +34,11 @@ func (e *StorageController) Post(ctx *gin.Context) {
 
 // GET
 func (e *StorageController) FileRaw(ctx *gin.Context) {
+	isVaild, _ := util.Permission(*e.DB, util.GetSettionID(ctx), permissions.StorageRaw.Permission())
+	if !isVaild {
+		util.GenerateResponse(ctx, http.StatusUnauthorized, "No Session found.", true, nil)
+		return
+	}
 	fileName := ctx.Param("fileName")
 	e.Service.GetFile(ctx, fileName)
 }

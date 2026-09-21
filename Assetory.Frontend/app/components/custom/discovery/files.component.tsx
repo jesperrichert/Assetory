@@ -16,11 +16,12 @@ import {
   FileTxtIcon,
   FileZipIcon,
 } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FileDetails } from "../actions/file-details.component";
 import {
   CodeXmlIcon,
   CurlyBracesIcon,
+  DownloadIcon,
   EditIcon,
   FileJsonIcon,
   TrashIcon,
@@ -34,8 +35,9 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import type { stringify } from "querystring";
-import { openFileRaw, parseFileName } from "~/utils/files";
 import { DefaultEditor } from "../editor/default-editor.component";
+import { downloadBlob, parseFileName } from "~/utils/files";
+import { AuthContext } from "~/context/auth.context";
 
 export type FilesDiscoveryProps = {
   folderName: string;
@@ -63,13 +65,21 @@ export const fileIcon: StringKeyComponentValue = {
 
 export function FilesDiscovery(props: FilesDiscoveryProps) {
   if (!props.isOpen) return;
+  const authContext = useContext(AuthContext)
   const [fileForDetails, setFileForDetails] = useState<DiscoveryFile | null>(
     null,
   );
   const [fileToDelete, setFileToDelete] = useState<DiscoveryFile | null>(null);
   const [fileToEdit, setFileToEdit] = useState<DiscoveryFile | null>(null);
-  const setFileToOpenRaw = (fileName: string) =>
-    openFileRaw(fileName, props.folderName);
+  const downloadFile = async(fileName: string) => {
+    const data = await fetch(`/api/storage/${parseFileName(fileName, props.folderName)}/raw`, {
+      headers: {
+          Authorization: authContext?.session ?? "",
+      }
+    })
+    const blob = await data.blob();
+    downloadBlob(blob, fileName)
+  }
 
   return (
     <>
@@ -128,9 +138,9 @@ export function FilesDiscovery(props: FilesDiscoveryProps) {
                             onClick={() => setFileForDetails(file)}
                             size={20}
                           />{" "}
-                          <CurlyBracesIcon
+                          <DownloadIcon
                             className="cursor-pointer"
-                            onClick={() => setFileToOpenRaw(file.name)}
+                            onClick={() => downloadFile(file.name)}
                             size={20}
                           />
                           <EditIcon

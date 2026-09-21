@@ -9,17 +9,17 @@ import (
 	"jespersen.zip.assetory/internal/util"
 )
 
-type AuthMiddleware struct {
+type SessionMiddleware struct {
 	DB *gorm.DB
 }
 
-func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
-	return &AuthMiddleware{
+func NewSessionMiddleware(db *gorm.DB) *SessionMiddleware {
+	return &SessionMiddleware{
 		DB: db,
 	}
 }
 
-func (middleware *AuthMiddleware) Handle(ctx *gin.Context) {
+func (middleware *SessionMiddleware) Handle(ctx *gin.Context) {
 	token := ctx.GetHeader("Authorization")
 	if len(token) == 0 {
 		util.GenerateResponse(

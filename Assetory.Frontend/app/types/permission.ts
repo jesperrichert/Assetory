@@ -1,4 +1,5 @@
 export enum Permission {
+  StorageRaw = "storage:raw",
   DataAuthSettings = "data:auth",
   EditAuth = "action:edit_auth",
   Star = "*:*",
