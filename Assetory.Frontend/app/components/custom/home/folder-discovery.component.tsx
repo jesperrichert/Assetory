@@ -59,7 +59,7 @@ export function Discovery({ tab }: { tab: string }) {
       />
       <div className="p-2">
         <div>
-          <span className="p-2">Project Folders</span>
+          <span className="p-2">Folder Discovery</span>
           <span className="flex justify-end items-end text-right p-2">
             <PlusIcon
               className="cursor-pointer"

@@ -20,8 +20,8 @@ export type UploadDialogProps = {
   refresh: () => void;
 };
 
-export function UploadDialog(prps: UploadDialogProps) {
-  if (!prps.isOpen) return;
+export function UploadDialog(props: UploadDialogProps) {
+  if (!props.isOpen) return;
 
   const authContext = useContext(AuthContext);
   const [files, setFiles] = useState<FileList | null>(null);
@@ -45,8 +45,8 @@ export function UploadDialog(prps: UploadDialogProps) {
       });
       if (req.status == 200) {
         toast("File uploaded successfully");
-        prps.refresh();
-        prps.onClose();
+        props.refresh();
+        props.onClose();
       } else {
         const json = await req.json();
         toast(`Failed with Code: ${json.message}`);
@@ -56,10 +56,10 @@ export function UploadDialog(prps: UploadDialogProps) {
 
   return (
     <div>
-      <Dialog onOpenChange={() => prps.onClose()} open={prps.isOpen}>
+      <Dialog onOpenChange={() => props.onClose()} open={props.isOpen}>
         <DialogContent className="rounded-2xl bg-secondary text-white">
           <DialogHeader>
-            <DialogTitle>{prps.title}</DialogTitle>
+            <DialogTitle>{props.title}</DialogTitle>
           </DialogHeader>
 
           <div className="justify-center items-center p-3">
